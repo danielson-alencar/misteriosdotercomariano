@@ -20,15 +20,22 @@
             background-color: #fff;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
+            text-align: center;
         }
 
         h1 {
-            text-align: center;
             color: #444;
+        }
+
+        #data-atual {
+            font-size: 1.1em;
+            color: #007bff;
+            margin-bottom: 20px;
         }
 
         #misterios {
             margin-top: 20px;
+            text-align: left;
         }
 
         .misterio {
@@ -37,6 +44,12 @@
             background-color: #f9f9f9;
             border-left: 5px solid #007bff;
             border-radius: 4px;
+            transition: background-color 0.3s, border-left-color 0.3s;
+        }
+
+        .misterio:hover {
+            background-color: #e0f0ff;
+            border-left-color: #0056b3;
         }
 
         .misterio h2 {
@@ -55,14 +68,23 @@
 <body>
     <div class="container">
         <h1>Mistérios do Dia</h1>
+        <p id="data-atual"></p>
         <div id="misterios"></div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const dataAtualElement = document.getElementById('data-atual');
             const misteriosElement = document.getElementById('misterios');
+
+            // Obtém e formata a data atual
+            const data = new Date();
+            const opcoes = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
+            const dataFormatada = data.toLocaleDateString('pt-BR', opcoes);
+            dataAtualElement.textContent = `Hoje é ${dataFormatada}`;
+
             const diasSemana = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
-            const hoje = new Date().getDay();
+            const hoje = data.getDay();
             const diaSemana = diasSemana[hoje];
 
             const misterios = {
@@ -102,9 +124,9 @@
         function getMisteriosLuminosos() {
             return [
                 { titulo: '1º Mistério Luminoso', descricao: 'Batismo de Nosso Senhor Jesus Cristo no rio Jordão' },
-                { titulo: '2º Mistério Luminoso', descricao: 'Primeiro milagre de Jesus transformando a água em vinho nas bodas de Caaná' },
+                { titulo: '2º Mistério Luminoso', descricao: 'Primeiro milagre de Jesus transformando a água em vinho nas bodas de Caná' },
                 { titulo: '3º Mistério Luminoso', descricao: 'Anunciação do Reino de Deus e o convite à conversão' },
-                { titulo: '4º Mistério Luminoso', descricao: 'A transfiguração de Nosso Senhor no Monte Thabor' },
+                { titulo: '4º Mistério Luminoso', descricao: 'A transfiguração de Nosso Senhor no Monte Tabor' },
                 { titulo: '5º Mistério Luminoso', descricao: 'A Instituição da Eucaristia na Última Ceia' }
             ];
         }
