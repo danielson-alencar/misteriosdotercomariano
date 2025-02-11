@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mistérios do Dia</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #444;
+        }
+
+        #misterios {
+            margin-top: 20px;
+        }
+
+        .misterio {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-left: 5px solid #007bff;
+            border-radius: 4px;
+        }
+
+        .misterio h2 {
+            margin: 0;
+            font-size: 1.2em;
+            color: #007bff;
+        }
+
+        .misterio p {
+            margin: 5px 0 0;
+            font-size: 1em;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Mistérios do Dia</h1>
+        <div id="misterios"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const misteriosElement = document.getElementById('misterios');
+            const diasSemana = ['Domingo', 'Segunda-feira', 'Terça-feira', 'Quarta-feira', 'Quinta-feira', 'Sexta-feira', 'Sábado'];
+            const hoje = new Date().getDay();
+            const diaSemana = diasSemana[hoje];
+
+            const misterios = {
+                'Segunda-feira': getMisteriosGozosos(),
+                'Terça-feira': getMisteriosDolorosos(),
+                'Quarta-feira': getMisteriosGloriosos(),
+                'Quinta-feira': getMisteriosLuminosos(),
+                'Sexta-feira': getMisteriosDolorosos(),
+                'Sábado': getMisteriosGozosos(),
+                'Domingo': getMisteriosGloriosos()
+            };
+
+            const misteriosDoDia = misterios[diaSemana];
+
+            if (misteriosDoDia) {
+                misteriosDoDia.forEach(misterio => {
+                    const div = document.createElement('div');
+                    div.className = 'misterio';
+                    div.innerHTML = `<h2>${misterio.titulo}</h2><p>${misterio.descricao}</p>`;
+                    misteriosElement.appendChild(div);
+                });
+            } else {
+                misteriosElement.innerHTML = `<p>Não há mistérios definidos para ${diaSemana}.</p>`;
+            }
+        });
+
+        function getMisteriosGozosos() {
+            return [
+                { titulo: '1º Mistério Gozoso', descricao: 'A Anunciação do Anjo e a Encarnação do Verbo' },
+                { titulo: '2º Mistério Gozoso', descricao: 'A visitação de Maria a sua prima Santa Isabel' },
+                { titulo: '3º Mistério Gozoso', descricao: 'Nascimento do Menino Jesus, na gruta fria em Belém' },
+                { titulo: '4º Mistério Gozoso', descricao: 'A apresentação do Menino Jesus no templo, e a purificação de Maria' },
+                { titulo: '5º Mistério Gozoso', descricao: 'A perda e o encontro do Menino Jesus no templo' }
+            ];
+        }
+
+        function getMisteriosLuminosos() {
+            return [
+                { titulo: '1º Mistério Luminoso', descricao: 'Batismo de Nosso Senhor Jesus Cristo no rio Jordão' },
+                { titulo: '2º Mistério Luminoso', descricao: 'Primeiro milagre de Jesus transformando a água em vinho nas bodas de Caaná' },
+                { titulo: '3º Mistério Luminoso', descricao: 'Anunciação do Reino de Deus e o convite à conversão' },
+                { titulo: '4º Mistério Luminoso', descricao: 'A transfiguração de Nosso Senhor no Monte Thabor' },
+                { titulo: '5º Mistério Luminoso', descricao: 'A Instituição da Eucaristia na Última Ceia' }
+            ];
+        }
+
+        function getMisteriosDolorosos() {
+            return [
+                { titulo: '1º Mistério Doloroso', descricao: 'A oração e agonia no Horto das Oliveiras' },
+                { titulo: '2º Mistério Doloroso', descricao: 'Flagelação de Nosso Senhor Jesus Cristo' },
+                { titulo: '3º Mistério Doloroso', descricao: 'A coroação de espinhos de Nosso Senhor Jesus Cristo' },
+                { titulo: '4º Mistério Doloroso', descricao: 'Nosso Senhor carregando a Cruz às costas' },
+                { titulo: '5º Mistério Doloroso', descricao: 'A Crucifixão e morte de Nosso Senhor Jesus Cristo' }
+            ];
+        }
+
+        function getMisteriosGloriosos() {
+            return [
+                { titulo: '1º Mistério Glorioso', descricao: 'A Ressurreição de Nosso Senhor Jesus Cristo' },
+                { titulo: '2º Mistério Glorioso', descricao: 'A Ascensão de Nosso Senhor Jesus Cristo' },
+                { titulo: '3º Mistério Glorioso', descricao: 'A descida do Espírito Santo' },
+                { titulo: '4º Mistério Glorioso', descricao: 'A Assunção de Nossa Senhora aos Céus de corpo e alma' },
+                { titulo: '5º Mistério Glorioso', descricao: 'A Coroação de Nossa Senhora como Rainha do Céu e da Terra dos Anjos e dos Homens' }
+            ];
+        }
+    </script>
+</body>
+</html>
