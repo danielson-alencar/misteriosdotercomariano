@@ -63,6 +63,34 @@
             font-size: 1em;
             color: #555;
         }
+
+        .navegacao {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .navegacao button {
+            padding: 10px 20px;
+            font-size: 1em;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .navegacao button:hover {
+            background-color: #0056b3;
+        }
+
+        .pagina {
+            display: none;
+        }
+
+        .pagina.ativa {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -71,6 +99,10 @@
         <p id="data-atual"></p>
         <div id="oracoes"></div>
         <div id="misterios"></div>
+        <div class="navegacao">
+            <button id="anterior">Anterior</button>
+            <button id="proximo">Próximo</button>
+        </div>
     </div>
 
     <script>
@@ -78,6 +110,8 @@
             const dataAtualElement = document.getElementById('data-atual');
             const oracoesElement = document.getElementById('oracoes');
             const misteriosElement = document.getElementById('misterios');
+            const anteriorButton = document.getElementById('anterior');
+            const proximoButton = document.getElementById('proximo');
 
             // Obtém e formata a data atual
             const data = new Date();
@@ -94,59 +128,12 @@
                 'Terça-feira': getMisteriosDolorosos(),
                 'Quarta-feira': getMisteriosGloriosos(),
                 'Quinta-feira': getMisteriosLuminosos(),
-                'Quarta-feira': getMisteriosDolorosos(),
+                'Sexta-feira': getMisteriosDolorosos(),
                 'Sábado': getMisteriosGozosos(),
                 'Domingo': getMisteriosGloriosos()
             };
 
-            exibirOracoes(); // Exibe as orações antes dos mistérios
-            const misteriosDoDia = misterios[diaSemana];
-
-            if (misteriosDoDia) {
-                misteriosDoDia.forEach(misterio => {
-                    const div = document.createElement('div');
-                    div.className = 'secao';
-                    div.innerHTML = `<h2>${misterio.titulo}</h2><p>${misterio.descricao}</p>`;
-                    misteriosElement.appendChild(div);
-
-                    // Exibe o Pai Nosso após cada mistério
-                    const paiNossoDiv = document.createElement('div');
-                    paiNossoDiv.className = 'secao';
-                    paiNossoDiv.innerHTML = `<h2>Pai Nosso</h2><p>Pai nosso que estais nos céus, santificado seja o Vosso nome...</p>`;
-                    misteriosElement.appendChild(paiNossoDiv);
-
-                    // Exibe as 10 Ave Marias após o Pai Nosso
-                    for (let i = 1; i <= 10; i++) {
-                        const aveMariaDiv = document.createElement('div');
-                        aveMariaDiv.className = 'secao';
-                        aveMariaDiv.innerHTML = `<h2>Ave Maria ${i}</h2><p>Ave Maria, cheia de graça, o Senhor é convosco...</p>`;
-                        misteriosElement.appendChild(aveMariaDiv);
-                    }
-
-                    // Exibe o Glória após as Ave Marias
-                    const gloriaDiv = document.createElement('div');
-                    gloriaDiv.className = 'secao';
-                    gloriaDiv.innerHTML = `<h2>Glória</h2><p>Glória ao Pai, ao Filho e ao Espírito Santo...</p>`;
-                    misteriosElement.appendChild(gloriaDiv);
-                });
-
-                // Exibe Infinitas Graças e Salve Rainha após o último Glória
-                const infinitasGracasDiv = document.createElement('div');
-                infinitasGracasDiv.className = 'secao';
-                infinitasGracasDiv.innerHTML = `<h2>Infinitas Graças</h2><p>Infinitas graças vos damos, Soberana Rainha...</p>`;
-                misteriosElement.appendChild(infinitasGracasDiv);
-
-                const salveRainhaDiv = document.createElement('div');
-                salveRainhaDiv.className = 'secao';
-                salveRainhaDiv.innerHTML = `<h2>Salve Rainha</h2><p>Salve Rainha, Mãe de misericórdia, vida, doçura e esperança nossa, salve!...</p>`;
-                misteriosElement.appendChild(salveRainhaDiv);
-            } else {
-                misteriosElement.innerHTML = `<p>Não há mistérios definidos para ${diaSemana}.</p>`;
-            }
-        });
-
-        function exibirOracoes() {
-            const oracoes = [
+            const oracoesIniciais = [
                 { titulo: 'Sinal da Cruz', descricao: 'Em nome do Pai, do Filho e do Espírito Santo. Amém.' },
                 { titulo: 'Creio', descricao: 'Creio em Deus Pai todo poderoso, criador do céu e da terra...' },
                 { titulo: 'Pai Nosso', descricao: 'Pai nosso que estais nos céus, santificado seja o Vosso nome...' },
@@ -154,13 +141,97 @@
                 { titulo: 'Glória', descricao: 'Glória ao Pai, ao Filho e ao Espírito Santo...' }
             ];
 
-            oracoes.forEach(orc => {
-                const div = document.createElement('div');
-                div.className = 'secao';
-                div.innerHTML = `<h2>${orc.titulo}</h2><p>${orc.descricao}</p>`;
-                document.getElementById('oracoes').appendChild(div);
-            });
-        }
+            const misteriosDoDia = misterios[diaSemana];
+
+            if (misteriosDoDia) {
+                let paginaAtual = 0;
+                const paginas = [];
+
+                // Cria a primeira página com as orações iniciais
+                const primeiraPagina = document.createElement('div');
+                primeiraPagina.className = 'pagina';
+                oracoesIniciais.forEach(orc => {
+                    primeiraPagina.innerHTML += `
+                        <div class="secao">
+                            <h2>${orc.titulo}</h2>
+                            <p>${orc.descricao}</p>
+                        </div>
+                    `;
+                });
+                misteriosElement.appendChild(primeiraPagina);
+                paginas.push(primeiraPagina);
+
+                // Cria as páginas para cada mistério
+                misteriosDoDia.forEach(misterio => {
+                    const div = document.createElement('div');
+                    div.className = 'pagina';
+                    div.innerHTML = `
+                        <div class="secao">
+                            <h2>${misterio.titulo}</h2>
+                            <p>${misterio.descricao}</p>
+                        </div>
+                        <div class="secao">
+                            <h2>Pai Nosso</h2>
+                            <p>Pai nosso que estais nos céus, santificado seja o Vosso nome...</p>
+                        </div>
+                        ${Array.from({ length: 10 }, (_, i) => `
+                            <div class="secao">
+                                <h2>Ave Maria ${i + 1}</h2>
+                                <p>Ave Maria, cheia de graça, o Senhor é convosco...</p>
+                            </div>
+                        `).join('')}
+                        <div class="secao">
+                            <h2>Glória</h2>
+                            <p>Glória ao Pai, ao Filho e ao Espírito Santo...</p>
+                        </div>
+                    `;
+                    misteriosElement.appendChild(div);
+                    paginas.push(div);
+                });
+
+                // Cria a última página com as orações finais
+                const ultimaPagina = document.createElement('div');
+                ultimaPagina.className = 'pagina';
+                ultimaPagina.innerHTML = `
+                    <div class="secao">
+                        <h2>Infinitas Graças</h2>
+                        <p>Infinitas graças vos damos, Soberana Rainha...</p>
+                    </div>
+                    <div class="secao">
+                        <h2>Salve Rainha</h2>
+                        <p>Salve Rainha, Mãe de misericórdia, vida, doçura e esperança nossa, salve!...</p>
+                    </div>
+                `;
+                misteriosElement.appendChild(ultimaPagina);
+                paginas.push(ultimaPagina);
+
+                function mostrarPagina(index) {
+                    paginas.forEach((pagina, i) => {
+                        pagina.classList.toggle('ativa', i === index);
+                    });
+                    anteriorButton.disabled = index === 0;
+                    proximoButton.disabled = index === paginas.length - 1;
+                }
+
+                anteriorButton.addEventListener('click', () => {
+                    if (paginaAtual > 0) {
+                        paginaAtual--;
+                        mostrarPagina(paginaAtual);
+                    }
+                });
+
+                proximoButton.addEventListener('click', () => {
+                    if (paginaAtual < paginas.length - 1) {
+                        paginaAtual++;
+                        mostrarPagina(paginaAtual);
+                    }
+                });
+
+                mostrarPagina(0);
+            } else {
+                misteriosElement.innerHTML = `<p>Não há mistérios definidos para ${diaSemana}.</p>`;
+            }
+        });
 
         function getMisteriosGozosos() {
             return [
