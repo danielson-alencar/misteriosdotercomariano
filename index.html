@@ -33,12 +33,12 @@
             margin-bottom: 20px;
         }
 
-        #misterios {
+        #oracoes, #misterios {
             margin-top: 20px;
             text-align: left;
         }
 
-        .misterio {
+        .secao {
             margin-bottom: 15px;
             padding: 10px;
             background-color: #f9f9f9;
@@ -47,18 +47,18 @@
             transition: background-color 0.3s, border-left-color 0.3s;
         }
 
-        .misterio:hover {
+        .secao:hover {
             background-color: #e0f0ff;
             border-left-color: #0056b3;
         }
 
-        .misterio h2 {
+        .secao h2 {
             margin: 0;
             font-size: 1.2em;
             color: #007bff;
         }
 
-        .misterio p {
+        .secao p {
             margin: 5px 0 0;
             font-size: 1em;
             color: #555;
@@ -69,12 +69,14 @@
     <div class="container">
         <h1>Mistérios do Dia</h1>
         <p id="data-atual"></p>
+        <div id="oracoes"></div>
         <div id="misterios"></div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const dataAtualElement = document.getElementById('data-atual');
+            const oracoesElement = document.getElementById('oracoes');
             const misteriosElement = document.getElementById('misterios');
 
             // Obtém e formata a data atual
@@ -92,62 +94,111 @@
                 'Terça-feira': getMisteriosDolorosos(),
                 'Quarta-feira': getMisteriosGloriosos(),
                 'Quinta-feira': getMisteriosLuminosos(),
-                'Sexta-feira': getMisteriosDolorosos(),
+                'Quarta-feira': getMisteriosDolorosos(),
                 'Sábado': getMisteriosGozosos(),
                 'Domingo': getMisteriosGloriosos()
             };
 
+            exibirOracoes(); // Exibe as orações antes dos mistérios
             const misteriosDoDia = misterios[diaSemana];
 
             if (misteriosDoDia) {
                 misteriosDoDia.forEach(misterio => {
                     const div = document.createElement('div');
-                    div.className = 'misterio';
+                    div.className = 'secao';
                     div.innerHTML = `<h2>${misterio.titulo}</h2><p>${misterio.descricao}</p>`;
                     misteriosElement.appendChild(div);
+
+                    // Exibe o Pai Nosso após cada mistério
+                    const paiNossoDiv = document.createElement('div');
+                    paiNossoDiv.className = 'secao';
+                    paiNossoDiv.innerHTML = `<h2>Pai Nosso</h2><p>Pai nosso que estais nos céus, santificado seja o Vosso nome...</p>`;
+                    misteriosElement.appendChild(paiNossoDiv);
+
+                    // Exibe as 10 Ave Marias após o Pai Nosso
+                    for (let i = 1; i <= 10; i++) {
+                        const aveMariaDiv = document.createElement('div');
+                        aveMariaDiv.className = 'secao';
+                        aveMariaDiv.innerHTML = `<h2>Ave Maria ${i}</h2><p>Ave Maria, cheia de graça, o Senhor é convosco...</p>`;
+                        misteriosElement.appendChild(aveMariaDiv);
+                    }
+
+                    // Exibe o Glória após as Ave Marias
+                    const gloriaDiv = document.createElement('div');
+                    gloriaDiv.className = 'secao';
+                    gloriaDiv.innerHTML = `<h2>Glória</h2><p>Glória ao Pai, ao Filho e ao Espírito Santo...</p>`;
+                    misteriosElement.appendChild(gloriaDiv);
                 });
+
+                // Exibe Infinitas Graças e Salve Rainha após o último Glória
+                const infinitasGracasDiv = document.createElement('div');
+                infinitasGracasDiv.className = 'secao';
+                infinitasGracasDiv.innerHTML = `<h2>Infinitas Graças</h2><p>Infinitas graças vos damos, Soberana Rainha...</p>`;
+                misteriosElement.appendChild(infinitasGracasDiv);
+
+                const salveRainhaDiv = document.createElement('div');
+                salveRainhaDiv.className = 'secao';
+                salveRainhaDiv.innerHTML = `<h2>Salve Rainha</h2><p>Salve Rainha, Mãe de misericórdia, vida, doçura e esperança nossa, salve!...</p>`;
+                misteriosElement.appendChild(salveRainhaDiv);
             } else {
                 misteriosElement.innerHTML = `<p>Não há mistérios definidos para ${diaSemana}.</p>`;
             }
         });
 
+        function exibirOracoes() {
+            const oracoes = [
+                { titulo: 'Sinal da Cruz', descricao: 'Em nome do Pai, do Filho e do Espírito Santo. Amém.' },
+                { titulo: 'Creio', descricao: 'Creio em Deus Pai todo poderoso, criador do céu e da terra...' },
+                { titulo: 'Pai Nosso', descricao: 'Pai nosso que estais nos céus, santificado seja o Vosso nome...' },
+                { titulo: 'Ave Maria (3 vezes)', descricao: 'Ave Maria, cheia de graça, o Senhor é convosco...' },
+                { titulo: 'Glória', descricao: 'Glória ao Pai, ao Filho e ao Espírito Santo...' }
+            ];
+
+            oracoes.forEach(orc => {
+                const div = document.createElement('div');
+                div.className = 'secao';
+                div.innerHTML = `<h2>${orc.titulo}</h2><p>${orc.descricao}</p>`;
+                document.getElementById('oracoes').appendChild(div);
+            });
+        }
+
         function getMisteriosGozosos() {
             return [
                 { titulo: '1º Mistério Gozoso', descricao: 'A Anunciação do Anjo e a Encarnação do Verbo' },
                 { titulo: '2º Mistério Gozoso', descricao: 'A visitação de Maria a sua prima Santa Isabel' },
-                { titulo: '3º Mistério Gozoso', descricao: 'Nascimento do Menino Jesus, na gruta fria em Belém' },
-                { titulo: '4º Mistério Gozoso', descricao: 'A apresentação do Menino Jesus no templo, e a purificação de Maria' },
+                { titulo: '3º Mistério Gozoso', descricao: 'Nascimento do Menino Jesus' },
+                { titulo: '4º Mistério Gozoso', descricao: 'A apresentação do Menino Jesus no templo' },
                 { titulo: '5º Mistério Gozoso', descricao: 'A perda e o encontro do Menino Jesus no templo' }
             ];
         }
 
         function getMisteriosLuminosos() {
             return [
-                { titulo: '1º Mistério Luminoso', descricao: 'Batismo de Nosso Senhor Jesus Cristo no rio Jordão' },
-                { titulo: '2º Mistério Luminoso', descricao: 'Primeiro milagre de Jesus transformando a água em vinho nas bodas de Caná' },
-                { titulo: '3º Mistério Luminoso', descricao: 'Anunciação do Reino de Deus e o convite à conversão' },
-                { titulo: '4º Mistério Luminoso', descricao: 'A transfiguração de Nosso Senhor no Monte Tabor' },
-                { titulo: '5º Mistério Luminoso', descricao: 'A Instituição da Eucaristia na Última Ceia' }
+                { titulo: '1º Mistério Luminoso', descricao: 'Batismo de Jesus no rio Jordão' },
+                { titulo: '2º Mistério Luminoso', descricao: 'Milagre nas bodas de Caná' },
+                { titulo: '3º Mistério Luminoso', descricao: 'Anúncio do Reino de Deus' },
+                { titulo: '4º Mistério Luminoso', descricao: 'Transfiguração de Jesus' },
+                { titulo: '5º Mistério Luminoso', descricao: 'Instituição da Eucaristia' }
             ];
         }
 
         function getMisteriosDolorosos() {
             return [
-                { titulo: '1º Mistério Doloroso', descricao: 'A oração e agonia no Horto das Oliveiras' },
-                { titulo: '2º Mistério Doloroso', descricao: 'Flagelação de Nosso Senhor Jesus Cristo' },
-                { titulo: '3º Mistério Doloroso', descricao: 'A coroação de espinhos de Nosso Senhor Jesus Cristo' },
-                { titulo: '4º Mistério Doloroso', descricao: 'Nosso Senhor carregando a Cruz às costas' },
-                { titulo: '5º Mistério Doloroso', descricao: 'A Crucifixão e morte de Nosso Senhor Jesus Cristo' }
+                { titulo: '1º Mistério Doloroso', descricao: 'Agonia de Jesus no Horto' },
+                { titulo: '2º Mistério Doloroso', descricao: 'Flagelação de Jesus' },
+                { titulo: '3º Mistério Doloroso', descricao: 'Coroação de espinhos' },
+                { titulo: '4º Mistério Doloroso', descricao: 'Jesus carregando a Cruz' },
+                { titulo: '5º Mistério Doloroso', descricao: 'Crucificação e morte de Jesus' }
             ];
         }
 
         function getMisteriosGloriosos() {
             return [
-                { titulo: '1º Mistério Glorioso', descricao: 'A Ressurreição de Nosso Senhor Jesus Cristo' },
-                { titulo: '2º Mistério Glorioso', descricao: 'A Ascensão de Nosso Senhor Jesus Cristo' },
-                { titulo: '3º Mistério Glorioso', descricao: 'A descida do Espírito Santo' },
-                { titulo: '4º Mistério Glorioso', descricao: 'A Assunção de Nossa Senhora aos Céus de corpo e alma' },
-                { titulo: '5º Mistério Glorioso', descricao: 'A Coroação de Nossa Senhora como Rainha do Céu e da Terra dos Anjos e dos Homens' }
+                { titulo: '1º Mistério Glorioso', descricao: 'Ressurreição de Jesus' },
+                { titulo: '2º Mistério Glorioso', descricao: 'Ascensão de Jesus' },
+                { titulo: '3º Mistério Glorioso', descricao: 'Descida do Espírito Santo' },
+                { titulo: '4º Mistério Glorioso', descricao: 'Assunção de Maria' },
+                { titulo: '5º Mistério Glorioso', descricao: 'Coroação de Maria no Céu' }
             ];
         }
     </script>
