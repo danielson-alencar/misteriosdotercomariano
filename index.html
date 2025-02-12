@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mistérios do Dia</title>
+    <title>Terço Mariano</title>
     <!-- Adicionando Font Awesome para ícones -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -47,6 +47,9 @@
             border-left: 5px solid #007bff;
             border-radius: 4px;
             transition: background-color 0.3s, border-left-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .secao:hover {
@@ -57,15 +60,14 @@
         .secao h2 {
             margin: 0;
             font-size: 1.2em;
-            color: #007bff; /* Cor padrão para títulos */
+            color: #007bff;
             display: flex;
             align-items: center;
-            gap: 10px; /* Espaço entre o ícone e o texto */
+            gap: 10px;
         }
 
-        /* Estilo específico para os títulos dos mistérios */
         .secao .titulo-misterio {
-            color: #d63384; /* Nova cor para os títulos dos mistérios (rosa) */
+            color: #d63384;
         }
 
         .secao p {
@@ -101,12 +103,42 @@
         .pagina.ativa {
             display: block;
         }
+
+        .progresso {
+            margin-top: 20px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            height: 20px;
+            overflow: hidden;
+        }
+
+        .progresso-bar {
+            height: 100%;
+            background-color: #007bff;
+            width: 0;
+            transition: width 0.3s;
+        }
+
+        .progresso-texto {
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #555;
+        }
+
+        .checkbox {
+            margin-left: auto;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Mistérios do Dia</h1>
+        <h1>Terço Mariano</h1>
         <p id="data-atual"></p>
+        <div class="progresso">
+            <div class="progresso-bar" id="progresso-bar"></div>
+        </div>
+        <div class="progresso-texto" id="progresso-texto">0% concluído</div>
         <div id="oracoes"></div>
         <div id="misterios"></div>
         <div class="navegacao">
@@ -122,6 +154,8 @@
             const misteriosElement = document.getElementById('misterios');
             const anteriorButton = document.getElementById('anterior');
             const proximoButton = document.getElementById('proximo');
+            const progressoBar = document.getElementById('progresso-bar');
+            const progressoTexto = document.getElementById('progresso-texto');
 
             // Obtém e formata a data atual
             const data = new Date();
@@ -156,20 +190,36 @@
             if (misteriosDoDia) {
                 let paginaAtual = 0;
                 const paginas = [];
+                const totalItens = oracoesIniciais.length + misteriosDoDia.length * 13 + 2; // 13 itens por mistério (1 mistério + 1 Pai Nosso + 10 Ave Marias + 1 Glória) + 2 orações finais
+                let itensConcluidos = 0;
+
+                // Função para atualizar o progresso
+                function atualizarProgresso() {
+                    const porcentagem = (itensConcluidos / totalItens) * 100;
+                    progressoBar.style.width = `${porcentagem}%`;
+                    progressoTexto.textContent = `${porcentagem.toFixed(1)}% concluído`;
+                }
 
                 // Cria a primeira página com as orações iniciais
                 const primeiraPagina = document.createElement('div');
                 primeiraPagina.className = 'pagina';
                 oracoesIniciais.forEach(orc => {
-                    primeiraPagina.innerHTML += `
-                        <div class="secao">
-                            <h2>
-                                <i class="fas fa-${orc.icone}"></i>
-                                ${orc.titulo}
-                            </h2>
-                            <p>${orc.descricao}</p>
-                        </div>
+                    const div = document.createElement('div');
+                    div.className = 'secao';
+                    div.innerHTML = `
+                        <h2>
+                            <i class="fas fa-${orc.icone}"></i>
+                            ${orc.titulo}
+                        </h2>
+                        <p>${orc.descricao}</p>
+                        <input type="checkbox" class="checkbox">
                     `;
+                    div.querySelector('.checkbox').addEventListener('change', function() {
+                        if (this.checked) itensConcluidos++;
+                        else itensConcluidos--;
+                        atualizarProgresso();
+                    });
+                    primeiraPagina.appendChild(div);
                 });
                 misteriosElement.appendChild(primeiraPagina);
                 paginas.push(primeiraPagina);
@@ -185,6 +235,7 @@
                                 ${misterio.titulo}
                             </h2>
                             <p>${misterio.descricao}</p>
+                            <input type="checkbox" class="checkbox">
                         </div>
                         <div class="secao">
                             <h2>
@@ -192,6 +243,7 @@
                                 Pai Nosso
                             </h2>
                             <p>Pai nosso que estais nos céus, santificado seja o Vosso nome...</p>
+                            <input type="checkbox" class="checkbox">
                         </div>
                         ${Array.from({ length: 10 }, (_, i) => `
                             <div class="secao">
@@ -200,6 +252,7 @@
                                     Ave Maria ${i + 1}
                                 </h2>
                                 <p>Ave Maria, cheia de graça, o Senhor é convosco...</p>
+                                <input type="checkbox" class="checkbox">
                             </div>
                         `).join('')}
                         <div class="secao">
@@ -208,8 +261,16 @@
                                 Glória
                             </h2>
                             <p>Glória ao Pai, ao Filho e ao Espírito Santo...</p>
+                            <input type="checkbox" class="checkbox">
                         </div>
                     `;
+                    div.querySelectorAll('.checkbox').forEach(checkbox => {
+                        checkbox.addEventListener('change', function() {
+                            if (this.checked) itensConcluidos++;
+                            else itensConcluidos--;
+                            atualizarProgresso();
+                        });
+                    });
                     misteriosElement.appendChild(div);
                     paginas.push(div);
                 });
@@ -224,6 +285,7 @@
                             Infinitas Graças
                         </h2>
                         <p>Infinitas graças vos damos, Soberana Rainha...</p>
+                        <input type="checkbox" class="checkbox">
                     </div>
                     <div class="secao">
                         <h2>
@@ -231,8 +293,16 @@
                             Salve Rainha
                         </h2>
                         <p>Salve Rainha, Mãe de misericórdia, vida, doçura e esperança nossa, salve!...</p>
+                        <input type="checkbox" class="checkbox">
                     </div>
                 `;
+                ultimaPagina.querySelectorAll('.checkbox').forEach(checkbox => {
+                    checkbox.addEventListener('change', function() {
+                        if (this.checked) itensConcluidos++;
+                        else itensConcluidos--;
+                        atualizarProgresso();
+                    });
+                });
                 misteriosElement.appendChild(ultimaPagina);
                 paginas.push(ultimaPagina);
 
