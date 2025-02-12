@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mistérios do Dia</title>
+    <!-- Adicionando Font Awesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -55,7 +57,15 @@
         .secao h2 {
             margin: 0;
             font-size: 1.2em;
-            color: #007bff;
+            color: #007bff; /* Cor padrão para títulos */
+            display: flex;
+            align-items: center;
+            gap: 10px; /* Espaço entre o ícone e o texto */
+        }
+
+        /* Estilo específico para os títulos dos mistérios */
+        .secao .titulo-misterio {
+            color: #d63384; /* Nova cor para os títulos dos mistérios (rosa) */
         }
 
         .secao p {
@@ -134,11 +144,11 @@
             };
 
             const oracoesIniciais = [
-                { titulo: 'Sinal da Cruz', descricao: 'Em nome do Pai, do Filho e do Espírito Santo. Amém.' },
-                { titulo: 'Creio', descricao: 'Creio em Deus Pai todo poderoso, criador do céu e da terra...' },
-                { titulo: 'Pai Nosso', descricao: 'Pai nosso que estais nos céus, santificado seja o Vosso nome...' },
-                { titulo: 'Ave Maria (3 vezes)', descricao: 'Ave Maria, cheia de graça, o Senhor é convosco...' },
-                { titulo: 'Glória', descricao: 'Glória ao Pai, ao Filho e ao Espírito Santo...' }
+                { titulo: 'Sinal da Cruz', descricao: 'Em nome do Pai, do Filho e do Espírito Santo. Amém.', icone: 'cross' },
+                { titulo: 'Creio', descricao: 'Creio em Deus Pai todo poderoso, criador do céu e da terra...', icone: 'book-bible' },
+                { titulo: 'Pai Nosso', descricao: 'Pai nosso que estais nos céus, santificado seja o Vosso nome...', icone: 'hands-praying' },
+                { titulo: 'Ave Maria (3 vezes)', descricao: 'Ave Maria, cheia de graça, o Senhor é convosco...', icone: 'fa-solid fa-crown' },
+                { titulo: 'Glória', descricao: 'Glória ao Pai, ao Filho e ao Espírito Santo...', icone: 'dove' }
             ];
 
             const misteriosDoDia = misterios[diaSemana];
@@ -153,7 +163,10 @@
                 oracoesIniciais.forEach(orc => {
                     primeiraPagina.innerHTML += `
                         <div class="secao">
-                            <h2>${orc.titulo}</h2>
+                            <h2>
+                                <i class="fas fa-${orc.icone}"></i>
+                                ${orc.titulo}
+                            </h2>
                             <p>${orc.descricao}</p>
                         </div>
                     `;
@@ -167,21 +180,33 @@
                     div.className = 'pagina';
                     div.innerHTML = `
                         <div class="secao">
-                            <h2>${misterio.titulo}</h2>
+                            <h2 class="titulo-misterio">
+                                <i class="fas fa-pray"></i>
+                                ${misterio.titulo}
+                            </h2>
                             <p>${misterio.descricao}</p>
                         </div>
                         <div class="secao">
-                            <h2>Pai Nosso</h2>
+                            <h2>
+                                <i class="fas fa-hands-praying"></i>
+                                Pai Nosso
+                            </h2>
                             <p>Pai nosso que estais nos céus, santificado seja o Vosso nome...</p>
                         </div>
                         ${Array.from({ length: 10 }, (_, i) => `
                             <div class="secao">
-                                <h2>Ave Maria ${i + 1}</h2>
+                                <h2>
+                                    <i class="fas fa-solid fa-crown"></i>
+                                    Ave Maria ${i + 1}
+                                </h2>
                                 <p>Ave Maria, cheia de graça, o Senhor é convosco...</p>
                             </div>
                         `).join('')}
                         <div class="secao">
-                            <h2>Glória</h2>
+                            <h2>
+                                <i class="fas fa-dove"></i>
+                                Glória
+                            </h2>
                             <p>Glória ao Pai, ao Filho e ao Espírito Santo...</p>
                         </div>
                     `;
@@ -194,11 +219,17 @@
                 ultimaPagina.className = 'pagina';
                 ultimaPagina.innerHTML = `
                     <div class="secao">
-                        <h2>Infinitas Graças</h2>
+                        <h2>
+                            <i class="fas fa-hands-praying"></i>
+                            Infinitas Graças
+                        </h2>
                         <p>Infinitas graças vos damos, Soberana Rainha...</p>
                     </div>
                     <div class="secao">
-                        <h2>Salve Rainha</h2>
+                        <h2>
+                            <i class="fas fa-crown"></i>
+                            Salve Rainha
+                        </h2>
                         <p>Salve Rainha, Mãe de misericórdia, vida, doçura e esperança nossa, salve!...</p>
                     </div>
                 `;
