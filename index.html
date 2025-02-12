@@ -76,24 +76,32 @@
             color: #555;
         }
 
-        .navegacao {
+        .paginacao {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
+            gap: 5px;
             margin-top: 20px;
         }
 
-        .navegacao button {
-            padding: 10px 20px;
+        .paginacao button {
+            padding: 10px 15px;
             font-size: 1em;
-            color: #fff;
-            background-color: #007bff;
-            border: none;
+            color: #007bff;
+            background-color: #fff;
+            border: 1px solid #007bff;
             border-radius: 5px;
             cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
         }
 
-        .navegacao button:hover {
-            background-color: #0056b3;
+        .paginacao button:hover {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .paginacao button.ativo {
+            background-color: #007bff;
+            color: #fff;
         }
 
         .pagina {
@@ -141,10 +149,7 @@
         <div class="progresso-texto" id="progresso-texto">0% concluído</div>
         <div id="oracoes"></div>
         <div id="misterios"></div>
-        <div class="navegacao">
-            <button id="anterior">Anterior</button>
-            <button id="proximo">Próximo</button>
-        </div>
+        <div class="paginacao" id="paginacao"></div>
     </div>
 
     <script>
@@ -152,10 +157,9 @@
             const dataAtualElement = document.getElementById('data-atual');
             const oracoesElement = document.getElementById('oracoes');
             const misteriosElement = document.getElementById('misterios');
-            const anteriorButton = document.getElementById('anterior');
-            const proximoButton = document.getElementById('proximo');
             const progressoBar = document.getElementById('progresso-bar');
             const progressoTexto = document.getElementById('progresso-texto');
+            const paginacaoElement = document.getElementById('paginacao');
 
             // Obtém e formata a data atual
             const data = new Date();
@@ -190,7 +194,7 @@
             if (misteriosDoDia) {
                 let paginaAtual = 0;
                 const paginas = [];
-                const totalItens = oracoesIniciais.length + misteriosDoDia.length * 13 + 2; // 13 itens por mistério (1 mistério + 1 Pai Nosso + 10 Ave Marias + 1 Glória) + 2 orações finais
+                const totalItens = oracoesIniciais.length + misteriosDoDia.length * 14 + 2; // 14 itens por mistério (1 mistério + 1 Pai Nosso + 10 Ave Marias + 1 Glória + 1 Oração do Ó meu Jesus) + 2 orações finais
                 let itensConcluidos = 0;
 
                 // Função para atualizar o progresso
@@ -263,6 +267,14 @@
                             <p>Glória ao Pai, ao Filho e ao Espírito Santo...</p>
                             <input type="checkbox" class="checkbox">
                         </div>
+                        <div class="secao">
+                            <h2>
+                                <i class="fas fa-pray"></i>
+                                Ó meu Jesus
+                            </h2>
+                            <p>Ó meu Jesus, perdoai-nos, livrai-nos do fogo do inferno, levai as almas todas para o céu e socorrei principalmente as que mais precisarem.</p>
+                            <input type="checkbox" class="checkbox">
+                        </div>
                     `;
                     div.querySelectorAll('.checkbox').forEach(checkbox => {
                         checkbox.addEventListener('change', function() {
@@ -306,27 +318,25 @@
                 misteriosElement.appendChild(ultimaPagina);
                 paginas.push(ultimaPagina);
 
+                // Cria a paginação
+                paginas.forEach((_, index) => {
+                    const botao = document.createElement('button');
+                    botao.textContent = index + 1;
+                    botao.addEventListener('click', () => {
+                        mostrarPagina(index);
+                    });
+                    paginacaoElement.appendChild(botao);
+                });
+
                 function mostrarPagina(index) {
                     paginas.forEach((pagina, i) => {
                         pagina.classList.toggle('ativa', i === index);
                     });
-                    anteriorButton.disabled = index === 0;
-                    proximoButton.disabled = index === paginas.length - 1;
+                    // Atualiza o botão ativo na paginação
+                    paginacaoElement.querySelectorAll('button').forEach((botao, i) => {
+                        botao.classList.toggle('ativo', i === index);
+                    });
                 }
-
-                anteriorButton.addEventListener('click', () => {
-                    if (paginaAtual > 0) {
-                        paginaAtual--;
-                        mostrarPagina(paginaAtual);
-                    }
-                });
-
-                proximoButton.addEventListener('click', () => {
-                    if (paginaAtual < paginas.length - 1) {
-                        paginaAtual++;
-                        mostrarPagina(paginaAtual);
-                    }
-                });
 
                 mostrarPagina(0);
             } else {
